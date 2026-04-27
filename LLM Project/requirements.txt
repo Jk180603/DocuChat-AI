@@ -1,0 +1,23 @@
+# Core LLM & RAG (stable compatible versions)
+langchain==0.1.20
+langchain-community==0.0.38
+
+# Vector Store & Embeddings
+faiss-cpu
+sentence-transformers
+
+# Document Processing
+pypdf
+python-multipart
+
+# API
+fastapi
+uvicorn[standard]
+pydantic
+
+# UI
+streamlit
+
+# Utilities
+python-dotenv
+tiktoken

@@ -1,0 +1,16 @@
+
+
+services:
+  docuchat-ai:
+    build: .
+    container_name: docuchat-ai
+    ports:
+      - "8000:8000"  # FastAPI
+      - "8501:8501"  # Streamlit
+    volumes:
+      - ./data:/app/data  # Persist uploaded documents
+    environment:
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - CHUNK_SIZE=500
+      - CHUNK_OVERLAP=100
+    restart: unless-stopped
