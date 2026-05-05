@@ -12,5 +12,5 @@ A production-ready **Retrieval-Augmented Generation (RAG)** application that ena
 - ✅ RESTful FastAPI backend
 - ✅ Production-ready with Docker support
 
-## Deom
+## Demo
 ![Output](Output.png)
