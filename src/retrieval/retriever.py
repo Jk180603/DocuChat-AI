@@ -25,7 +25,7 @@ class HybridRetriever:
         self.embeddings = HuggingFaceEmbeddings(
             model_name=embedding_model,
             model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True},
+            encode_kwargs={"normalize_embeddings": True},# normalize all e.vector
         )
         self.vectorstore = None
         self.bm25 = None
@@ -50,11 +50,11 @@ class HybridRetriever:
     def _reciprocal_rank_fusion(
         self, dense_docs: list, bm25_docs: list, k: int = 60
     ) -> list[Document]:
-        scores: dict[str, float] = {}
-        doc_map: dict[str, Document] = {}
+        scores: dict[str, float] = {}#each unique chunks combined ranking score 
+        doc_map: dict[str, Document] = {}#actual chunk object corresonds to ech score 
 
         for rank, doc in enumerate(dense_docs):
-            key = doc.page_content[:100]
+            key = doc.page_content[:100] #first 100 as auniq 
             scores[key] = scores.get(key, 0) + self.dense_weight * (1 / (rank + k))
             doc_map[key] = doc
 
@@ -63,8 +63,8 @@ class HybridRetriever:
             scores[key] = scores.get(key, 0) + self.bm25_weight * (1 / (rank + k))
             doc_map[key] = doc
 
-        ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-        return [doc_map[key] for key, _ in ranked[:self.k]]
+        ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True) #sort based on2nd pos like lambda tells to do from score 
+        return [doc_map[key] for key, _ in ranked[:self.k]] #gives 5 top 
 
     def retrieve(self, query: str) -> list[Document]:
         if not self.vectorstore or not self.bm25:
@@ -76,7 +76,7 @@ class HybridRetriever:
         # BM25 retrieval
         tokenized_query = query.lower().split()
         bm25_scores = self.bm25.get_scores(tokenized_query)
-        top_indices = np.argsort(bm25_scores)[::-1][:self.k]
+        top_indices = np.argsort(bm25_scores)[::-1][:self.k] #reverseing order to get top
         bm25_results = [self.documents[i] for i in top_indices]
 
         # Combine with RRF
@@ -86,7 +86,7 @@ class HybridRetriever:
         if self.vectorstore:
             self.vectorstore.save_local(path)
 
-    def load(self, path: str, documents: list[Document]) -> None:
+    def load(self, path: str, documents: list[Document]) -> None: #bring back saved search system like loaded game 
         self.vectorstore = FAISS.load_local(
             path, self.embeddings, allow_dangerous_deserialization=True
         )
