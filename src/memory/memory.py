@@ -27,7 +27,7 @@ class SlidingWindowMemory:
         if len(self.history) > self.window_size:
             self.history = self.history[-self.window_size:]
 
-    def get_context(self) -> str:
+    def get_context(self) -> str: #g, readable texts
         if not self.history:
             return ""
         lines = []
@@ -36,7 +36,7 @@ class SlidingWindowMemory:
             lines.append(f"{prefix}: {msg.content}")
         return "\n".join(lines)
 
-    def get_messages(self) -> list[dict]:
+    def get_messages(self) -> list[dict]:#g, structured data 
         return [{"role": m.role, "content": m.content} for m in self.history]
 
     def clear(self) -> None:
