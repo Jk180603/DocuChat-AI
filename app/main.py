@@ -40,7 +40,7 @@ all_docs = []
 async def lifespan(app: FastAPI):
     # Preload embedding model at startup so first upload is fast
     print("Preloading embedding model...")
-    _ = retriever.embeddings.embed_query("warmup")
+    _ = retriever.embeddings.embed_query("warmup")#runs f embedding calcualtion on the word warm up 
     print("DocuChat Production RAG v3 ready")
     yield
     print("Shutting down...")
@@ -172,11 +172,11 @@ def query(req: QueryRequest):
     context = "\n\n".join([d.page_content for d in docs[:5]])
     if req.use_memory and len(memory) > 0:
         context = (
-            f"Previous conversation:\n{memory.get_context()}"
+            f"Previous conversation:\n{memory.get_context()}" # so ai can remember your prev que if you ask related things to that que , not treat as another new
             f"\n\n---\nDocument context:\n{context}"
         )
 
-    # Generate
+    # Generate and sends 
     try:
         response = gateway.generate(effective_query, context)
     except Exception as e:
