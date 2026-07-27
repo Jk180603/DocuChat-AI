@@ -66,18 +66,18 @@ class LLMGateway:
                 print("Redis not available, running without cache")
                 self.cache = None
 
-    def _make_cache_key(self, query: str, context: str) -> str:
+    def _make_cache_key(self, query: str, context: str) -> str: # cache glag as true for que i have to update it 
         content = f"{query}::{context[:500]}"
         return f"docuchat:{hashlib.md5(content.encode()).hexdigest()}"
 
-    def _call_llm(self, llm, query: str, context: str, provider: str) -> tuple[str, int]:
+    def _call_llm(self, llm, query: str, context: str, provider: str) -> tuple[str, int]: #what this fun revives str, int 
         messages = [
-            SystemMessage(content=SYSTEM_PROMPT),
+            SystemMessage(content=SYSTEM_PROMPT), # prompt flg or given to sys
             HumanMessage(content=f"Context:\n{context}\n\nQuestion: {query}")
         ]
         response = llm.invoke(messages)
         text = response.content
-        tokens = getattr(response, 'usage_metadata', {})
+        tokens = getattr(response, 'usage_metadata', {}) #token counting
         total_tokens = tokens.get('total_tokens', 0) if tokens else 0
         return text, total_tokens
 
