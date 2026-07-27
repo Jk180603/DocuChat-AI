@@ -34,7 +34,7 @@ class DocumentIngestionPipeline:
         self.splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
-            separators=["\n\n", "\n", ". ", " ", ""],
+            separators=["\n\n", "\n", ". ", " ", ""], # div paragraph in smart way possible 
             length_function=len,
         )
 
@@ -53,7 +53,7 @@ class DocumentIngestionPipeline:
 
     def _hash_file(self, file_path: str) -> str:
         with open(file_path, "rb") as f:
-            return hashlib.md5(f.read()).hexdigest()[:8]
+            return hashlib.md5(f.read()).hexdigest()[:8] #fingerprint and keeps 8 first letter from that hash 
 
     def _clean_text(self, text: str) -> str:
         # Remove excessive whitespace
@@ -92,7 +92,7 @@ class DocumentIngestionPipeline:
 
         # Add chunk metadata
         for i, chunk in enumerate(chunks):
-            chunk.metadata["chunk_id"] = i
+            chunk.metadata["chunk_id"] = i #tag each chunk with its pos no and length
             chunk.metadata["chunk_size"] = len(chunk.page_content)
 
         return IngestionResult(
