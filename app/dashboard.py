@@ -58,7 +58,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
+    with st.chat_message(msg["role"]):# shows msg with their role in ui 
         st.write(msg["content"])
         if msg.get("metadata"):
             with st.expander("Response details"):
@@ -76,7 +76,7 @@ if prompt := st.chat_input("Ask a question about your documents..."):
     with st.chat_message("user"):
         st.write(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant"):#sending data to real backen
         with st.spinner("Retrieving and generating..."):
             try:
                 response = requests.post(
